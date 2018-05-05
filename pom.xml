@@ -1,0 +1,175 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.zhenglj</groupId>
+  <artifactId>maven_war</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  
+  <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profiles.activation>dev</profiles.activation>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prd</id>
+            <properties>
+                <profiles.activation>prd</profiles.activation>
+            </properties>
+        </profile>
+    </profiles>
+  
+  
+<dependencies>
+  	
+  	 <!-- Spring MVC support  start-->
+  	<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-webmvc</artifactId>
+    <version>5.0.5.RELEASE</version>
+	</dependency>
+  	 <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>5.0.5.RELEASE</version>
+        </dependency>
+        <dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-jdbc</artifactId>
+    <version>5.0.5.RELEASE</version>
+	</dependency>
+        <dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-core</artifactId>
+    <version>2.9.5</version>
+</dependency>
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.9.5</version>
+</dependency>
+<!-- Spring MVC support end -->
+
+
+	<!-- 数据库 start -->
+	<dependency>
+  		<groupId>mysql</groupId>
+  		<artifactId>mysql-connector-java</artifactId>
+  		<version>8.0.11</version>
+  	</dependency>
+  	
+  	<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid</artifactId>
+    <version>1.1.9</version>
+	</dependency>
+	<!-- 数据库 end -->
+  </dependencies>
+  
+  
+  
+  <build>
+  		<filters> <!-- 指定使用的 filter -->
+            <filter>src/main/resources/profile/${profiles.activation}/application.properties</filter>
+        </filters>
+        
+         <resources>
+         <!-- 使用profile中的配置文件中的值，替换resources目录或子目录所有properties类型的文件, --> 
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+		        <includes>  
+		            <include>**/*.properties</include>  
+		        </includes>
+		        <!-- 排除profile目录以及子目录下的文件 -->  
+		        <excludes>  
+		            <exclude>profile/**/*</exclude>  
+		        </excludes>
+            </resource>
+            
+            <!-- resources目录以及子目录中的xml文件 --> 
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+		        <includes>  
+		            <include>**/*.xml</include>  
+		        </includes>
+		        <!-- 排除profile目录以及子目录下的文件 -->  
+		        <excludes>
+		            <exclude>profile/**/*</exclude>  
+		        </excludes>
+            </resource>
+            
+            <!-- java目录中以及子目录中的xml文件 --> 
+            <resource>
+                <directory>src/main/java</directory>
+                <filtering>false</filtering>
+		        <includes>
+		            <include>**/*.xml</include>  
+		        </includes>
+            </resource>
+        </resources>
+  
+  
+  <!-- 构建插件 -->
+  <plugins>
+  		<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+  
+  
+  <!-- 编译插件 -->
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>3.7.0</version>
+      <configuration>
+       	<encoding>UTF-8</encoding>
+        <source>1.8</source>
+        <target>1.8</target>
+      </configuration>
+    </plugin>
+    
+    <!-- 打包war插件 -->
+          <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+                   <artifactId>maven-war-plugin</artifactId>
+                   <version>2.4</version>
+               <configuration>
+                   <warName>${project.artifactId}</warName>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                   <includeEmptyDirectories>true</includeEmptyDirectories>
+               </configuration>
+           </plugin>
+  
+  </plugins>
+  
+  
+</build>
+
+
+<reporting>
+    <plugins>
+    <!-- 报告插件 -->
+      <plugin>
+      <!-- javadoc插件 -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <show>public</show>
+        </configuration>
+      </plugin>
+      
+    </plugins>
+  </reporting>
+</project>
