@@ -12,6 +12,9 @@ public class UserService {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	/***
+	 * 查询数据
+	 */
 	public void doQuery(){
 		String sql="select * from user";
 		List<Map<String, Object>> queryForList = jdbcTemplate.queryForList(sql);
